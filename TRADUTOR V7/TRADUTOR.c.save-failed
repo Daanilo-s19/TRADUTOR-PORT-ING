@@ -1,0 +1,227 @@
+#include "TRADUTOR.h"
+
+//////////////////////MENU DO SWITCH///////////////////////////////
+int menu()
+{
+    int n;
+    do
+    {
+       printf("INFORME UMA OPCAO ABAIXO: ");
+       printf("\n [0]SAIR\n [1]ABRIR TEXTO\n [2]INSERIR PALAVRA\n [3]MOSTRAR DADOS \n [4]TRADUZIR TEXTO\n [5] PALAVRAS QUE INICIAM COM DETERMINADA LETRA\n ~~>");
+       scanf("%d", &n);
+       printf("\n\n");
+    }while(n<0 || n>9);
+    getchar();
+    return n;
+
+}
+//////////////////////LEITURA /////////////////////////////////////
+void leitura(char *port)
+{
+    char eng[TAM], SEP[2]={'-'};
+    FILE *fp;
+
+    if((fp=fopen("DICIONARIO.txt", "a"))==NULL)
+    {
+          printf("NAO FOI POSSIVEL SALVAR NO ARQUIVO.");
+          exit(0);
+    }
+
+   	if(strlen(port)==0){  //CASO A STRING NAO POSSUA CONTEUDO, COMO NO CASE 2
+        printf("PALAVRA EM PORTUGUES\n");
+        scanf("%s",port);
+	}
+    printf("TRADUCAO DA PALAVRA %s\n", port);
+    scanf("%s",eng);
+    strcat(port,SEP);
+    strcat(port,eng);
+    my_tolower(port);         // SE O TEXTO ESTIVER MAIUSCULO PASSA PARA MINUSCULO
+    fprintf(fp,"%s\n", port); // SALVA A PALAVRA JÁ MINUSCULA NO DICIONÁRIO
+    fclose(fp);
+
+}
+//////////////////////INSERIR PALAVRA//////////////////////////////
+arvore* inserir_palavra(arvore *raiz, char *port)
+{
+    if(raiz==NULL)
+    {
+        raiz=(arvore*)malloc(sizeof(arvore));
+        if(raiz==NULL)
+            exit(1);
+        strcpy((raiz->pt),port);
+        raiz->esq=NULL;
+        raiz->dir=NULL;
+        //printf("RAIZ\n");
+        return raiz;
+    }
+
+    if(strcmp(raiz->pt,port)>0){
+        //printf("ESQUERDA %s < %s\n", port, raiz->pt);
+        raiz->esq=inserir_palavra(raiz->esq,port);
+    }
+
+    else if(strcmp(raiz->pt,port)<0){
+          // printf("DIREITA %s > %s\n", port, raiz->pt);
+           raiz->dir=inserir_palavra(raiz->dir,port); }
+    else
+        printf("PALVRA REPETIDA\n");
+
+    return raiz;
+
+}
+//////////////////////ABRIR ARVORE/////////////////////////////////
+arvore* abrir_arvore(arvore **raiz)
+{
+    FILE *fp;
+    char port[TAM];
+    if((fp=fopen("DICIONARIO.txt","r"))==NULL)
+    {
+        printf(" NAO FOI POSSIVEL ABRIR ARQUIVO\n");
+        exit(1);
+    }
+
+    while(!feof(fp))
+    {
+
+       fscanf(fp,"%s",port);
+
+        if((*raiz)==NULL)
+            *raiz=inserir_palavra(*raiz, port);
+        else
+            inserir_palavra(*raiz, port);
+
+    }
+
+    fclose(fp);
+    return *raiz;
+}
+//////////////////////ABRIR ARQUIVO////////////////////////////////
+void abrir_frase(char *txt)
+{
+    FILE *fp;
+    if((fp=fopen("FRASE.txt","r"))==NULL)
+    {
+        printf(" NAO FOI POSSIVEL ABRIR ARQUIVO\n");
+        exit(1);
+    }
+    while(!feof(fp))
+    {
+        fgets(txt, TAM, fp);
+        my_tolower(txt);         // SE O TEXTO ESTIVER MAIUSCULO PASSA PARA MINUSCULO
+        printf("%s\n", txt);
+    }
+    fclose(fp);
+}
+///////////////////////VERIFICADOR/////////////////////////////////
+char * verifica(arvore *raiz, char *txt)
+{
+    int i;
+    char s[TAM];
+    if(raiz == NULL){
+        printf ("PALAVRA NAO ENCONTRADA\n\n");
+        return NULL;
+    }
+	//printf("%s / %s\n",raiz->pt, txt);
+	strcpy(s, raiz->pt);
+	i = my_strtok(raiz->pt, '-');
+	s[i] = '\0';
+
+    if(strcmp(txt, s)>0)
+        return verifica(raiz->dir, txt);
+    else if (strcmp(txt, s)<0)
+        return verifica(raiz->esq,txt);
+    return(raiz->pt+i+1);
+}
+//////////////////////MOSTRAR DADOS////////////////////////////////
+void mostrar_dados(arvore *raiz)
+{
+    if(raiz==NULL) return;
+    mostrar_dados(raiz->esq);
+    printf("%s\n",raiz->pt);
+    mostrar_dados(raiz->dir);
+}
+///////////////////////TRADUCAO///////////////////////////////////
+void traducao(arvore* raiz, char *txt)
+{
+	char *aux;
+	FILE *fp;
+    if((fp=fopen("FRASE.txt", "r"))==NULL)     // ABRE O ARQUIVO FRASE
+    {
+        printf(" NAO FOI POSSIVEL ABRIR ARQUIVO\n");
+        exit(1);
+    }
+    while(fscanf(fp, "%s",txt) != EOF)      // ABRE O ARQUIVO LENDO PALAVRA POR PALAVRA
+    {
+        my_tolower(txt);                   // SE A PALAVRA ESTIVER MAIUSCULO PASSA PARA MINUSCULO
+        aux = verifica(raiz, txt);        // VERIFICA E COMPARA A PALAVRA NA ARVORE
+        if(aux == NULL)
+        {                                //SE A PALAVRA EM PORT NAO ESTIVER PEDE A TRADUCAO E A INSERE NO DICIONARIO E NA ARVORE
+            leitura(txt);
+            inserir_palavra(raiz, txt);
+        }else printf("%s ", aux);      // PRINTA A TRADUCAO DA PALAVRA EM PORT
+    }
+    printf("\n");
+    fclose(fp);
+
+}
+///////////////////////////////MY STRTOK/////////////////////////
+int my_strtok(char* s, char c)
+{
+    int i;
+    for(i=0; i<strlen(s);i++)
+    {
+        if(s[i] == c)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+//////////////////////MY TOLOWER/////////////////////////////////
+int my_tolower(char *s)
+{
+    int i;
+    for(i=0;i<strlen(s); i++)
+    {
+      s[i]=tolower(s[i]);
+
+    }
+    return *s;
+}
+//////////////////////Comparando string/////////////////////////////////
+bool compare (char *a,char *b)
+{
+
+	for(int i=0;i<1;i++)
+    {
+		if(a[i]==b[i])
+			return 1;
+		else
+			return 0;
+    }
+}
+//////////////////////Buscar palavras que comece com determinada letra /////////////////////////////////
+
+int buscar(arvore* raiz, char*letra, int *i)
+{
+    printf(" ANTES %d\n", i);
+	if(raiz==NULL) return NULL;
+
+	if(strncmp(raiz->pt, letra,1)==0) // COMPARA APENAS O PRIMEIRO CARACTERE DA STRING
+      {
+          printf("%s\n",raiz->pt);
+          i++;
+
+      }
+
+    if(strcmp(raiz->pt, letra)>0)
+      *i= buscar(raiz->esq, letra,  i);
+    else if(strcmp(raiz->pt,letra)<0)
+        *i= buscar(raiz->dir, letra,  i);
+
+    printf(" DEPOIS %d\n", i);
+    return i;
+
+}
+
+

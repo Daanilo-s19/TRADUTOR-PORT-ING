@@ -1,0 +1,68 @@
+# depslib dependency file v1.0
+1528325697 source:c:\users\danilo\onedrive\documentos\uneb\estrutura de dados 1\tradutor\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1529514316 source:c:\users\uneb\desktop\arvoretraducaov6\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	"TRADUTOR.h"
+
+1529514162 c:\users\uneb\desktop\arvoretraducaov6\tradutor.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+
+1529514520 source:c:\users\uneb\desktop\arvoretraducaov6\tradutor.c
+	"TRADUTOR.h"
+
+1529627852 source:c:\users\danilo\onedrive\documentos\uneb\estrutura de dados 1\tradutor v6\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	"TRADUTOR.h"
+
+1529687672 c:\users\danilo\onedrive\documentos\uneb\estrutura de dados 1\tradutor v6\tradutor.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+
+1529688763 source:c:\users\danilo\onedrive\documentos\uneb\estrutura de dados 1\tradutor v6\tradutor.c
+	"TRADUTOR.h"
+
+1529977633 source:c:\users\danilo\onedrive\documentos\uneb\estrutura de dados 1\tradutor v7\tradutor.c
+	"TRADUTOR.h"
+
+1529967606 c:\users\danilo\onedrive\documentos\uneb\estrutura de dados 1\tradutor v7\tradutor.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	<locale.h>
+	<stdbool.h>
+
+1529967606 source:c:\users\danilo\onedrive\documentos\uneb\estrutura de dados 1\tradutor v7\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	<locale.h>
+	"TRADUTOR.h"
+
+1529977633 source:c:\users\danilo\onedrive\documentos\uneb\ii - semestre\estrutura de dados 1\tradutor v7\tradutor.c
+	"TRADUTOR.h"
+
+1529967606 c:\users\danilo\onedrive\documentos\uneb\ii - semestre\estrutura de dados 1\tradutor v7\tradutor.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	<locale.h>
+	<stdbool.h>
+
